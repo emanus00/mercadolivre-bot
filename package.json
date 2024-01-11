@@ -1,0 +1,14 @@
+{
+  "name": "mercadolivre-bot",
+  "version": "1.0.0",
+  "description": "A Simple Web Scraping for studying",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emanuel",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^21.7.0"
+  }
+}
