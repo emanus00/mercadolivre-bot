@@ -1,5 +1,5 @@
 const pup = require("puppeteer");
-
+const fs = require('fs');
 const searchFor = "macbook";
 const url = "https://www.mercadolivre.com.br/";
 var c = 1; // Renomeei a variável para evitar conflito
@@ -31,7 +31,7 @@ const list = [];
 
   // Mostrar o Preço e o Título no console
 
-  let links;
+  let links; // Declara a variável links fora do bloco try
 
   try {
     
@@ -77,7 +77,29 @@ const list = [];
     c++; // Mova a lógica de incremento da variável c para dentro do loop
   }
 
+  // Filtrar apenas os produtos Macbook
+  const macbookList = list.filter(product => product.title.toLowerCase().includes("macbook"));
+
+  // Ordenar a lista de Macbooks por preço crescente
+  macbookList.sort((a, b) => parseFloat(a.price.replace(',', '.')) - parseFloat(b.price.replace(',', '.')));
+
+  // Mostrar a lista final de Macbooks ordenados por preço
+  console.log("Lista de Macbooks Ordenados por Preço Crescente:");
+  console.log(macbookList);
+
   console.log(list);
+
+    // Após a exibição da lista no console
+  const jsonFileName = 'macbooks.json';
+
+  fs.writeFile(jsonFileName, JSON.stringify(macbookList, null, 2), (err) => {
+    if (err) {
+      console.error('Erro ao escrever no arquivo JSON:', err);
+    } else {
+      console.log(`Dados salvos em ${jsonFileName}`);
+    }
+  });
+
 
   await page.waitForTimeout(3000);
   await browser.close();
