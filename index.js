@@ -31,14 +31,12 @@ const list = [];
 
   // Mostrar o Preço e o Título no console
 
-  let links; // Declara a variável links fora do bloco try
+  let links; // Declara a variável links fora try
 
   try {
-    
-    // Aguarde a presença do seletor dentro do contêiner pai
     await page.waitForSelector('.ui-search-result__content .ui-search-result__content-wrapper .ui-search-item__group a', { timeout: 5000 });
 
-    // Use page.evaluate para obter os links
+    // Usei page.evaluate para obter os links
     links = await page.evaluate(() => {
       const linkElements = document.querySelectorAll('.ui-search-result__content .ui-search-result__content-wrapper .ui-search-item__group a');
       return Array.from(linkElements).map(link => link.href);
@@ -74,10 +72,10 @@ const list = [];
 
     list.push(obj);
 
-    c++; // Mova a lógica de incremento da variável c para dentro do loop
+    c++; 
   }
 
-  // Filtrar apenas os produtos Macbook
+  // Filtrar apenas os macbooks
   const macbookList = list.filter(product => product.title.toLowerCase().includes("macbook"));
 
   // Ordenar a lista de Macbooks por preço crescente
@@ -89,7 +87,7 @@ const list = [];
 
   console.log(list);
 
-    // Após a exibição da lista no console
+    // Depois da exibição da lista no console
   const jsonFileName = 'macbooks.json';
 
   fs.writeFile(jsonFileName, JSON.stringify(macbookList, null, 2), (err) => {
