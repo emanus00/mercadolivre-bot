@@ -31,7 +31,7 @@ const list = [];
 
   // Mostrar o Preço e o Título no console
 
-  let links; // Declara a variável links fora do bloco try
+  let links;
 
   try {
     
