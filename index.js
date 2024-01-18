@@ -7,7 +7,7 @@ const list = [];
 
 (async () => {
   
-  const browser = await pup.launch({ headless: false });
+  const browser = await pup.launch();
   const page = await browser.newPage();
 
   console.log("Iniciei!");
@@ -31,26 +31,32 @@ const list = [];
 
   // Mostrar o Preço e o Título no console
 
-  let links; // Declara a variável links fora try
+// ...
 
-  try {
-    await page.waitForSelector('.ui-search-result__content .ui-search-result__content-wrapper .ui-search-item__group a', { timeout: 5000 });
+let links; // Declare a variável links fora do bloco try
 
-    // Usei page.evaluate para obter os links
-    links = await page.evaluate(() => {
-      const linkElements = document.querySelectorAll('.ui-search-result__content .ui-search-result__content-wrapper .ui-search-item__group a');
-      return Array.from(linkElements).map(link => link.href);
-    });
+try {
+  // Aguarde a presença do seletor dentro do contêiner pai
+  await page.waitForSelector('.ui-search-result__content .ui-search-result__content-wrapper .ui-search-item__group a', { timeout: 5000 });
 
-    //console.log(links);
-  } catch (error) {
-    console.error("Erro ao extrair links:", error);
-  }
+  // Use page.evaluate para obter os links diretamente da página de resultados
+  links = await page.evaluate(() => {
+    const linkElements = document.querySelectorAll('.ui-search-result__content .ui-search-result__content-wrapper .ui-search-item__group a');
+    return Array.from(linkElements).map(link => link.href);
+  });
+
+  //console.log(links);
+} catch (error) {
+  console.error("Erro ao extrair links:", error);
+}
+
+// ...
+
 
   // ...
 
   for (const link of links) {
-    if (c === 10) continue
+    if (c === 50) continue
     console.log("Página ", c);
     await page.goto(link);
     await page.waitForSelector('.ui-pdp-title'); // Espera pelo título
@@ -68,14 +74,15 @@ const list = [];
       title,
       price,
       seller,
+      link,
     };
 
     list.push(obj);
 
-    c++; 
+    c++; // Mova a lógica de incremento da variável c para dentro do loop
   }
 
-  // Filtrar apenas os macbooks
+  // Filtrar apenas os produtos Macbook
   const macbookList = list.filter(product => product.title.toLowerCase().includes("macbook"));
 
   // Ordenar a lista de Macbooks por preço crescente
@@ -87,7 +94,7 @@ const list = [];
 
   console.log(list);
 
-    // Depois da exibição da lista no console
+    // Após a exibição da lista no console
   const jsonFileName = 'macbooks.json';
 
   fs.writeFile(jsonFileName, JSON.stringify(macbookList, null, 2), (err) => {
